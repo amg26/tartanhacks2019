@@ -8,3 +8,7 @@ def index() :
 @app.route('/join', methods=['POST'])
 def join():
 	return 'nice ' + request.form['join_code']
+
+@app.route('/userprofile', methods=['GET'])
+def userprofile() :
+	return render_template('testing.html')
