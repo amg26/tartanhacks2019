@@ -1,16 +1,18 @@
 from flask import Flask, request, render_template, session
 from flask.views import MethodView
 from flask_sqlalchemy import SQLAlchemy
+import os
+from werkzeug.utils import ArgumentValidationError, validate_arguments
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'slqclkekql-12cumiojkwfa-fo2i4c2ic4flajkfa'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = "user_uploads"
 
 
 '''Add database'''
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
-
 
 class User(db.Model):
 	username = db.Column(db.String(80), primary_key=True)
@@ -69,3 +71,10 @@ def join():
 @app.route('/userprofile', methods=['GET'])
 def userprofile() :
 	return render_template('testing.html')
+	  
+@app.route('/submit_form',methods = ['POST', 'GET'])
+def result():
+	if request.method == 'POST':
+		result = request.form
+		print(result)
+		return 'form submitted'
