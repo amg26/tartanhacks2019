@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, session, jsonify
+from flask import Flask, request, render_template, session, jsonify, redirect
 from flask.views import MethodView
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -17,7 +17,7 @@ with app.app_context():
 	db.init_app(app)
 	print('hello')
 	db.create_all()
-	db.session.add(Event(name="testevent", joincode="hello"))
+	#db.session.add(Event(name="testevent", joincode="hello"))
 	db.session.commit()
 
 @app.route('/', methods=['GET'])
@@ -121,3 +121,32 @@ def dislike(userid):
 @app.route('/match', methods=['GET'])
 def view_match():
 	return render_template('match.html')
+
+@app.route('/event/create', methods=['GET'])
+def view_create():
+	return render_template('create.html')
+
+@app.route('/event/create', methods=['POST'])
+def post_create():
+	ev_unique_check = db.session.query(Event).filter(Event.joincode == request.form['join_code']).first()
+	if ev_unique_check is not None:
+		return 'That join code has already been used.'
+
+	ev = Event(name=request.form['event_name'], joincode=request.form['join_code'])
+	db.session.add(ev)
+	db.session.commit()
+
+	session['event_creator'] = True
+	session['event_id']  = ev.id
+
+	return redirect('/event/view/' + str(ev.id))
+
+@app.route('/event/view/<int:id>', methods=['GET'])
+def view_event(id):
+	ev = db.session.query(Event).filter(Event.id == id).first()
+	if ev is None:
+		return 'bad id'
+
+	return render_template('event.html', name=ev.name, joincode=ev.joincode)
+
+	

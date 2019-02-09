@@ -31,6 +31,12 @@ class Rating(db.Model):
 	liker = db.Column(db.Integer)
 	likee = db.Column(db.Integer)
 	rating = db.Column(db.String(80))
+
+class Match(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	eid = db.Column(db.Integer)
+	first = db.Column(db.Integer)
+	second = db.Column(db.Integer)
 		
 class UserAPI(MethodView):
 
