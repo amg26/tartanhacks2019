@@ -125,7 +125,7 @@ def dislike(userid):
 		print("adding like for " + str(rating))
 		db.session.add(rating)
 		db.session.commit()
-	return jsonify({'uuserid': match.next(db, None)})
+	return jsonify({'userid': match.next(db, None)})
 
 @app.route('/match', methods=['GET'])
 def view_match():
