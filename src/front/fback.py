@@ -56,7 +56,7 @@ def result():
 		db.session.commit()
 		print('added ' + str(usr))
 		session['uid'] = usr.id
-		return 'form submitted'
+		return render_template('waiting.html')
 
 @app.route('/rate', methods=['GET'])
 def rate():
@@ -67,7 +67,7 @@ def rate():
 		usr = db.session.query(User).filter(User.id == match.next(db, rating_user)).first()
 		return render_template('rateuser.html', firstName=usr.firstName, userid=usr.id)
 	else:
-		return 'No more users to rate'		#TODO: replace with a template or something
+		return render_template('waiting.html')		#TODO: replace with a template or something
 
 @app.route('/like/<int:userid>', methods=['POST'])
 def like(userid):
@@ -134,6 +134,19 @@ def view_match():
 	o_usr = db.session.query(User).filter(User.id == other).first()
 
 	return render_template('match.html', name1=usr.firstName, content1='hi', name2=o_usr.firstName, content2='heyo', bg_color=m.color)
+
+@app.route('/match/check', methods=['POST'])
+def post_match_check():
+	usr = db.session.query(User).filter(User.id == session['uid']).first()
+	if usr is None:
+		return 'no user session'
+	rate = match.next(db, usr)
+	if rate is None:
+		rate = False
+	else:
+		rate = True
+
+	return jsonify({'match': match.is_user_matched(db, usr.id), 'rate': rate})
 
 @app.route('/event/create', methods=['GET'])
 def view_create():
