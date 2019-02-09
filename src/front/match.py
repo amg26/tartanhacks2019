@@ -1,5 +1,6 @@
 from database import User, Event, Match, Rating
 from sqlalchemy import or_
+import random
 
 def next(db, user):
 	# Get other users in our event
@@ -30,14 +31,18 @@ def get_match(db, uid, uid2):
 
 def are_mutually_liked(db, ev, uid, uid2):
 	r1 = db.session.query(Rating).filter(Rating.eid == ev, Rating.liker == uid, Rating.likee == uid2).first()
-	r1 = db.session.query(Rating).filter(Rating.eid == ev, Rating.liker == uid, Rating.likee == uid2).first()
+	r2 = db.session.query(Rating).filter(Rating.eid == ev, Rating.liker == uid, Rating.likee == uid2).first()
 
 	return (r1 is not None) and (r2 is not None)
 
 def is_user_matched(db, uid):
-	match = match = db.session.query(Match).filter(or_(Match.first == uid, Match.second == uid)).first()
+	match = db.session.query(Match).filter(or_(Match.first == uid, Match.second == uid)).first()
 
 	return match is not None
+
+def get_user_match(db, uid):
+	match = db.session.query(Match).filter(or_(Match.first == uid, Match.second == uid)).first()
+	return match
 
 def create_match(db, eid, uid, uid2):
 	if uid > uid2:
@@ -45,7 +50,10 @@ def create_match(db, eid, uid, uid2):
 		uid = uid2
 		uid2 = tmp
 
-	match = Match(eid=eid, first=uid, second=uid2)
+	r = lambda: random.randint(0,255)
+	color = '#%02X%02X%02X' % (r(),r(),r())
+	print(color)
+	match = Match(eid=eid, first=uid, second=uid2, color=color)
 	db.session.add(match)
 	db.session.commit()
 
