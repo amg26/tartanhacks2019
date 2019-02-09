@@ -17,7 +17,7 @@ with app.app_context():
 	db.init_app(app)
 	print('hello')
 	db.create_all()
-	#db.session.add(Event(name="testevent", joincode="hello"))
+	db.session.add(Event(name="testevent", joincode="hello"))
 	db.session.commit()
 
 @app.route('/', methods=['GET'])
@@ -59,9 +59,14 @@ def result():
 
 @app.route('/rate', methods=['GET'])
 def rate():
-	usr = db.session.query(User).filter(User.id == match.next(db, None)).first()
+	rating_user = db.session.query(User).filter(User.id == session['uid']).first()
 
-	return render_template('rateuser.html', firstName=usr.firstName, userid=usr.id)
+	next_uid = match.next(db, rating_user)
+	if next_uid is not None:
+		usr = db.session.query(User).filter(User.id == match.next(db, rating_user)).first()
+		return render_template('rateuser.html', firstName=usr.firstName, userid=usr.id)
+	else:
+		return 'No more users to rate'		#TODO: replace with a template or something
 
 @app.route('/like/<int:userid>', methods=['POST'])
 def like(userid):
@@ -74,12 +79,22 @@ def like(userid):
 	if likee.eid != liker.eid:
 		return 'bad'
 
-	rating = Rating(eid = liker.eid, liker=liker.id, likee=likee.id, rating='like')
-	print("adding like for " + str(rating))
-	db.session.add(rating)
-	db.session.commit()
+	unique_check = db.session.query(Rating).filter(Rating.likee == likee.id, Rating.liker == liker.id).first()
+	if unique_check is not None:
+		# this is a duplicate like, ignore it
+		pass
+	else:
+		rating = Rating(eid = liker.eid, liker=liker.id, likee=likee.id, rating='like')
+		print("adding like for " + str(rating))
+		db.session.add(rating)
+		db.session.commit()
 
-	return jsonify({'userid': match.next(db, None), 'firstName': 'wewwee'})
+	next_uid = match.next(db, liker)
+	if next_uid is not None:
+		next_usr = db.session.query(User).filter(User.id == next_uid).first()
+		return jsonify({'userid': next_uid, 'firstName': next_usr.firstName})
+	else:
+		return jsonify({'userid': -1})		#TODO: replace with a template
 
 @app.route('/dislike/<int:userid>', methods=['POST'])
 def dislike(userid):
@@ -92,8 +107,13 @@ def dislike(userid):
 	if likee.eid != liker.eid:
 		return 'bad'
 
-	rating = Rating(eid = liker.eid, liker=liker.id, likee=likee.id, rating='dislike')
-	print("adding like for " + str(rating))
-	db.session.add(rating)
-	db.session.commit()
+	unique_check = db.session.query(Rating).filter(Rating.likee == likee.id, Rating.liker == liker.id).first()
+	if unique_check is not None:
+		# this is a duplicate dislike, ignore it
+		pass
+	else:
+		rating = Rating(eid = liker.eid, liker=liker.id, likee=likee.id, rating='dislike')
+		print("adding like for " + str(rating))
+		db.session.add(rating)
+		db.session.commit()
 	return jsonify({'uuserid': match.next(db, None)})
