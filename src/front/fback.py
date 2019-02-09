@@ -63,3 +63,9 @@ def result():
 		print('added ' + str(usr))
 		session['uid'] = usr.id
 		return 'form submitted'
+
+@app.route('/rate/<int:userid>', methods=['GET'])
+def rate(userid):
+	usr = db.session.query(User).filter(User.id == userid).first()
+
+	return render_template('rateuser.html', firstName=usr.firstName)
