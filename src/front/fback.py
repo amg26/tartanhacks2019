@@ -51,7 +51,15 @@ def userprofile() :
 def result():
 	if request.method == 'POST':
 		ev = db.session.query(Event).filter(Event.joincode == session['join_code']).first()
-		usr = User(username=request.form['name_form'], firstName=request.form['name_form'], eid=ev.id)
+		usr = User(username=request.form['name_form'],
+			firstName=request.form['name_form'],
+			eid=ev.id,
+			age=request.form['age_form'],
+			langy=request.form['language_form'],
+			idea=request.form['idea_form'],
+			exp=request.form['exp_form'],
+			plant=request.form['plant_form'],
+			)
 		db.session.add(usr)
 		db.session.commit()
 		print('added ' + str(usr))
@@ -65,7 +73,7 @@ def rate():
 	next_uid = match.next(db, rating_user)
 	if next_uid is not None:
 		usr = db.session.query(User).filter(User.id == match.next(db, rating_user)).first()
-		return render_template('rateuser.html', firstName=usr.firstName, userid=usr.id)
+		return render_template('rateuser.html', firstName=usr.firstName, userid=usr.id, age=usr.age, langy=usr.langy, idea=usr.idea, exp=usr.exp, plant=usr.plant)
 	else:
 		return 'No more users to rate'		#TODO: replace with a template or something
 
@@ -133,7 +141,7 @@ def view_match():
 		other = m.second
 	o_usr = db.session.query(User).filter(User.id == other).first()
 
-	return render_template('match.html', name1=usr.firstName, content1='hi', name2=o_usr.firstName, content2='heyo', bg_color=m.color)
+	return render_template('match.html', user1=usr, user2 = o_usr, bg_color=m.color)
 
 @app.route('/event/create', methods=['GET'])
 def view_create():

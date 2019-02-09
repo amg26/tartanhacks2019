@@ -63,6 +63,20 @@
 		}
 		
 	$(document).ready(function(){
+		alert('hi');
+		$("#name1").text({{user1.firstName}});
+		$("#name2").text({{user2.firstName}});
+		$("#age1").text({{user1.age}});
+		$("#age2").text({{user2.age}});
+		$("#langy1").text({{user1.langy}});
+		$("#langy2").text({{user2.langy}});
+		$("#idea1").text({{user1.idea}});
+		$("#idea2").text({{user2.idea}});
+		$("#exp1").text({{user1.exp}});
+		$("#exp2").text({{user2.exp}});
+		$("#plant1").text({{user1.plant}});
+		$("#plant2").text({{user2.plant}});
+		
 	//addCard(123,"todd boe", "wayerhandkfa");
 	//addCard(1223,"jeff","where has he gone");
 	});
@@ -116,15 +130,23 @@
 		<div class="card bg-dark col box-shadow" id="card1">
 		  <img class="card-img-top" src="https://loremflickr.com/320/240" alt="Card image">
 		  <div class="card-body">
-			<h4 class="card-title">{{name1}}</h4>
-			<p class="card-text">{{content1}}</p>
+			<h4 class="card-title" id="name1">usr1.firstName</h4>
+			<p class="card-text" id="age1">usr1.age</p>
+			<p class="card-text" id="langy1">usr1.langy</p>
+			<p class="card-text" id="idea1">usr1.idea</p>
+			<p class="card-text" id="exp1">usr1.exp</p>
+			<p class="card-text" id="plant1">usr1.plant</p>
 		  </div>
 		</div>
 		<div class="card bg-dark col box-shadow"  id="card1">
 		  <img class="card-img-top" src="https://loremflickr.com/320/240" alt="Card image">
 		  <div class="card-body">
-			<h4 class="card-title">{{name2}}</h4>
-			<p class="card-text">{{content2}}</p>
+			<h4 class="card-title" id="name2">usr2.firstName</h4>
+			<p class="card-text" id="age2">usr2.age</p>
+			<p class="card-text" id="langy2">usr2.langy</p>
+			<p class="card-text" id="idea2">usr2.idea</p>
+			<p class="card-text" id="exp2">usr2.exp</p>
+			<p class="card-text" id="plant2">usr2.plant</p>
 		  </div>
 		</div>
 	</div>
