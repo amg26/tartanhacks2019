@@ -38,7 +38,7 @@
         function pollUserCount() {
           $.post({url: '/event/num_users', method:"POST", success(result) {
             $("#user_count").text(result['num_users']);
-            setTimeout(pollUserCount, 1000);
+            setTimeout(pollUserCount, 3000);
           }});
         }
 
@@ -63,7 +63,7 @@
   	<h1 class="cover-heading">{{name}}</h1>
   	<p class="lead">Join Code: <b>{{joincode}}</b></p>
     <p id="user_count">0</p>
-    <button type="button" id="make_groups", class="btn">Create Groups</button>
+    <button type="button" id="make_groups", class="btn btn-primary">Create Groups</button>
   </main>
 
   <footer class="mastfoot mt-auto">

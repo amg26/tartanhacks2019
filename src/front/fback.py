@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, session, jsonify, redirect
 from flask.views import MethodView
 from flask_sqlalchemy import SQLAlchemy
 import os
-from database import User, Event, Rating, db
+from database import User, Event, Rating, Match, db
 import match
 
 app = Flask(__name__, static_url_path='/static')
@@ -161,4 +161,13 @@ def event_num_users():
 
 	return jsonify({'num_users': num_users})
 
-	
+@app.route('/event/generate', methods=['POST'])
+def event_generate_groups():
+	if not session['event_creator']:
+		return 'bad'
+
+	ev = db.session.query(Event).filter(Event.id == session['event_id']).first()
+
+	match.generate_matches(db, ev.id)
+
+	return 'ok'
