@@ -149,4 +149,13 @@ def view_event(id):
 
 	return render_template('event.html', name=ev.name, joincode=ev.joincode)
 
+@app.route('/event/num_users', methods=['POST'])
+def event_num_users():
+	if not session['event_creator']:
+		return 'bad'
+
+	num_users = db.query(User).filter(User.eid == session['event_id']).count()
+
+	return jsonify({'num_users': num_users})
+
 	
