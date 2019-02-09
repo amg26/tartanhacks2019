@@ -33,27 +33,35 @@
     <div class="inner">
       <h3 class="masthead-brand">Placeholder Name</h3>
       <nav class="nav nav-masthead justify-content-center">
-        <a class="nav-link active" href="#">Home</a>
+        <a class="nav-link" href="#">Home</a>
         <a class="nav-link" href="/event/create">Create Event</a>
         <a class="nav-link" href="#">Contact</a>
       </nav>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        function pollUserCount() {
+          $.post({url: '/match/check', method:"POST", success(result) {
+            if(result['match'] == true) {
+              window.location = '/match'
+            }
+            if(result['rate'] == true) {
+              window.location = '/rate'
+            }
+            setTimeout(pollUserCount, 3000);
+          }});
+        }
+
+        pollUserCount();
+      });
+    </script>
+
   </header>
 
   <main role="main" class="inner cover">
-    <h1 class="cover-heading">Join a group.</h1>
-    <p class="lead">Gather some crowd with our HOT new app ;)))))</p>
-    <form action="/join" method="post">
-      <div class="input-group mb-3">
-  	  <div class="input-group-prepend">
-  	    <span class="input-group-text" id="basic-addon1">Join Code:</span>
-  	  </div>
-    	  <input type="text" class="form-control" placeholder="join code" aria-label="Username" aria-describedby="basic-addon1" name="join_code">
-    	  <div class="input-group-append">
-        	<button class="btn btn-success" type="submit">Join!</button>
-    	  </div>
-  	</div>
-  </form>
+    <h1 class="cover-heading">Waiting for a match...</h1>
   </main>
 
   <footer class="mastfoot mt-auto">
@@ -64,3 +72,5 @@
 </div>
 </body>
 </html>
+
+
