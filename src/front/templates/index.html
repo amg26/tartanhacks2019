@@ -43,15 +43,17 @@
   <main role="main" class="inner cover">
     <h1 class="cover-heading">Join a group.</h1>
     <p class="lead">Gather some crowd with our HOT new app ;)))))</p>
-    <div class="input-group mb-3">
-	  <div class="input-group-prepend">
-	    <span class="input-group-text" id="basic-addon1">Join Code:</span>
-	  </div>
-  	  <input type="text" class="form-control" placeholder="join code" aria-label="Username" aria-describedby="basic-addon1">
-  	  <div class="input-group-append">
-      	<button class="btn btn-success" type="button">Join!</button>
+    <form action="/join" method="post">
+      <div class="input-group mb-3">
+  	  <div class="input-group-prepend">
+  	    <span class="input-group-text" id="basic-addon1">Join Code:</span>
   	  </div>
-	</div>
+    	  <input type="text" class="form-control" placeholder="join code" aria-label="Username" aria-describedby="basic-addon1" name="join_code">
+    	  <div class="input-group-append">
+        	<button class="btn btn-success" type="submit">Join!</button>
+    	  </div>
+  	</div>
+  </form>
   </main>
 
   <footer class="mastfoot mt-auto">
