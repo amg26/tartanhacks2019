@@ -117,3 +117,7 @@ def dislike(userid):
 		db.session.add(rating)
 		db.session.commit()
 	return jsonify({'uuserid': match.next(db, None)})
+
+@app.route('/match', methods=['GET'])
+def view_match():
+	return render_template('match.html')
