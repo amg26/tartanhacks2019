@@ -34,15 +34,17 @@
 	<script>
 	$(document).ready(function(){
 	  $("#likebutton").click(function(){
-		$.ajax({url: "/like/"+userid, success: function(result){
-		  $("#div1").html(result);
+		$.ajax({url: "/like/"+userid, method:"POST", success: function(result){
+			jsonResult = JSON.parse(result);
+			userid = jsonResult.userid;
+			$("#firstname").text(jsonResult.firstName);
 		}});
 	  });
 	});
 	$(document).ready(function(){
 	  $("#dislikebutton").click(function(){
 		$.ajax({url: "/dislike/"+userid, success: function(result){
-		  $("#div1").html(result);
+			alert('hi');
 		}});
 	  });
 	});
@@ -62,7 +64,7 @@
   </header>
 
   <main role="main" class="inner cover">
-    <h1 class="cover-heading">{{firstName}}</h1>
+    <h1 class="cover-heading" id="firstname">{{firstName}}</h1>
     <p>more stuff to rate them on</p>
 	<div class="row">
 	  <div class="col-sm-4">
