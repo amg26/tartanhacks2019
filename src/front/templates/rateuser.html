@@ -7,10 +7,12 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
     <title>Placeholder Name</title>
-
+	<script>
+		userid = {{userid}}
+		
+	</script>
     <!-- Bootstrap core CSS -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-
 
     <style>
       .bd-placeholder-img {
@@ -26,6 +28,25 @@
     </style>
     <!-- Custom styles for this template -->
     <link href="/static/cover.css" rel="stylesheet">
+	
+	<!-- button handling jquery-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	  $("#likebutton").click(function(){
+		$.ajax({url: "/like/"+userid, success: function(result){
+		  $("#div1").html(result);
+		}});
+	  });
+	});
+	$(document).ready(function(){
+	  $("#dislikebutton").click(function(){
+		$.ajax({url: "/dislike/"+userid, success: function(result){
+		  $("#div1").html(result);
+		}});
+	  });
+	});
+	</script>
   </head>
   <body class="text-center">
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -43,6 +64,17 @@
   <main role="main" class="inner cover">
     <h1 class="cover-heading">{{firstName}}</h1>
     <p>more stuff to rate them on</p>
+	<div class="row">
+	  <div class="col-sm-4">
+		<button type="button" class="btn btn-primary" id="likebutton">Like</button>
+	  </div>
+	  <div class="col-sm-4">
+		<button type="button" class="btn btn-danger" id="dislikebutton">Danger</button>
+	  </div>
+	</div>
+	
+	
+
   </main>
 
   <footer class="mastfoot mt-auto">
