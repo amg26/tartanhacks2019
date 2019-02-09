@@ -37,6 +37,10 @@
 		$.ajax({url: "/like/"+userid, method:"POST", success: function(result){
       console.log(result);
 			userid = result.userid
+      if(userid == -1) {
+        window.location = "match";
+      }
+
 			$("#firstname").text(result.firstName);
 		}});
 	  });
