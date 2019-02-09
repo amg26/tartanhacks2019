@@ -24,6 +24,13 @@ class Event(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(80), unique=False)
 	joincode = db.Column(db.String(80), unique=True)
+
+class Rating(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	eid = db.Column(db.Integer)
+	liker = db.Column(db.Integer)
+	likee = db.Column(db.Integer)
+	rating = db.Column(db.String(80))
 		
 class UserAPI(MethodView):
 

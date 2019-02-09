@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, jsonify
 from flask.views import MethodView
 from flask_sqlalchemy import SQLAlchemy
 import os
-from database import User, Event, db
+from database import User, Event, Rating, db
+import match
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'slqclkekql-12cumiojkwfa-fo2i4c2ic4flajkfa'
@@ -21,13 +22,6 @@ with app.app_context():
 
 @app.route('/', methods=['GET'])
 def index():
-	usr = User(username="testuser2", firstName="test")
-
-	db.session.add(usr)
-	print(usr.id)
-	db.session.commit()
-	print(usr.id)
-
 	print(User.query.all())
 
 	if session.get('join_code') is not None:
@@ -63,8 +57,43 @@ def result():
 		session['uid'] = usr.id
 		return 'form submitted'
 
-@app.route('/rate/<int:userid>', methods=['GET'])
-def rate(userid):
-	usr = db.session.query(User).filter(User.id == userid).first()
+@app.route('/rate', methods=['GET'])
+def rate():
+	usr = db.session.query(User).filter(User.id == match.next(db, None)).first()
 
-	return render_template('rateuser.html', firstName=usr.firstName)
+	return render_template('rateuser.html', firstName=usr.firstName, userid=usr.id)
+
+@app.route('/like/<int:userid>', methods=['POST'])
+def like(userid):
+	liker = db.session.query(User).filter(User.id == session['uid']).first()
+	likee = db.session.query(User).filter(User.id == userid).first()
+
+	if likee is None or liker is None:
+		return 'bad'
+
+	if likee.eid != liker.eid:
+		return 'bad'
+
+	rating = Rating(eid = liker.eid, liker=liker.id, likee=likee.id, rating='like')
+	print("adding like for " + str(rating))
+	db.session.add(rating)
+	db.session.commit()
+
+	return jsonify({'userid': match.next(db, None), 'firstName': 'wewwee'})
+
+@app.route('/dislike/<int:userid>', methods=['POST'])
+def dislike(userid):
+	liker = db.session.query(User).filter(User.id == session['uid']).first()
+	likee = db.session.query(User).filter(User.id == userid).first()
+
+	if likee is None or liker is None:
+		return 'bad'
+
+	if likee.eid != liker.eid:
+		return 'bad'
+
+	rating = Rating(eid = liker.eid, liker=liker.id, likee=likee.id, rating='dislike')
+	print("adding like for " + str(rating))
+	db.session.add(rating)
+	db.session.commit()
+	return jsonify({'uuserid': match.next(db, None)})

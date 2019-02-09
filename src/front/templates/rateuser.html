@@ -35,9 +35,9 @@
 	$(document).ready(function(){
 	  $("#likebutton").click(function(){
 		$.ajax({url: "/like/"+userid, method:"POST", success: function(result){
-			jsonResult = JSON.parse(result);
-			userid = jsonResult.userid;
-			$("#firstname").text(jsonResult.firstName);
+      console.log(result);
+			userid = result.userid
+			$("#firstname").text(result.firstName);
 		}});
 	  });
 	});
