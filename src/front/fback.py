@@ -15,7 +15,7 @@ class User(db.Model):
 	firstName = db.Column(db.String(80), unique = False, nullable = False)
 	age = db.Column(db.Integer, unique = False, Nullable = True)
 	profilePic = db.Column(db.LargeBinary, unique = True, nullable = True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+        email = db.Column(db.String(120), unique=True, nullable=False)
 	passions = db.Column(db.String(80), unique = False, nullable = True)
 	hometown = db.Column(db.String(80), unique = False, nullable = False)
 	bio = db.Column(db.String(300), unique = False, nullable = True)
