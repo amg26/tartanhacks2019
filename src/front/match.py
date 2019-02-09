@@ -30,7 +30,7 @@ def get_match(db, uid, uid2):
 
 def are_mutually_liked(db, ev, uid, uid2):
 	r1 = db.session.query(Rating).filter(Rating.eid == ev, Rating.liker == uid, Rating.likee == uid2).first()
-	r1 = db.session.query(Rating).filter(Rating.eid == ev, Rating.liker == uid, Rating.likee == uid2).first()
+	r2 = db.session.query(Rating).filter(Rating.eid == ev, Rating.liker == uid, Rating.likee == uid2).first()
 
 	return (r1 is not None) and (r2 is not None)
 
