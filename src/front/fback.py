@@ -50,7 +50,8 @@ def userprofile() :
 @app.route('/submit_form',methods = ['POST', 'GET'])
 def result():
 	if request.method == 'POST':
-		usr = User(username=request.form['name_form'], firstName=request.form['name_form'], eid=session['join_code'])
+		ev = db.session.query(Event).filter(Event.joincode == session['join_code']).first()
+		usr = User(username=request.form['name_form'], firstName=request.form['name_form'], eid=ev.id)
 		db.session.add(usr)
 		db.session.commit()
 		print('added ' + str(usr))
@@ -154,7 +155,9 @@ def event_num_users():
 	if not session['event_creator']:
 		return 'bad'
 
-	num_users = db.query(User).filter(User.eid == session['event_id']).count()
+	num_users = db.session.query(User).filter(User.eid == session['event_id']).count()
+	print(num_users)
+	print(session['event_id'])
 
 	return jsonify({'num_users': num_users})
 
