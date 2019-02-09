@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, session, jsonify, redirect
 from flask.views import MethodView
 from flask_sqlalchemy import SQLAlchemy
 import os
-from database import User, Event, Rating, db
+from database import User, Event, Rating, Match, db
 import match
 
 app = Flask(__name__, static_url_path='/static')
@@ -50,7 +50,8 @@ def userprofile() :
 @app.route('/submit_form',methods = ['POST', 'GET'])
 def result():
 	if request.method == 'POST':
-		usr = User(username=request.form['name_form'], firstName=request.form['name_form'], eid=session['join_code'])
+		ev = db.session.query(Event).filter(Event.joincode == session['join_code']).first()
+		usr = User(username=request.form['name_form'], firstName=request.form['name_form'], eid=ev.id)
 		db.session.add(usr)
 		db.session.commit()
 		print('added ' + str(usr))
@@ -149,4 +150,24 @@ def view_event(id):
 
 	return render_template('event.html', name=ev.name, joincode=ev.joincode)
 
-	
+@app.route('/event/num_users', methods=['POST'])
+def event_num_users():
+	if not session['event_creator']:
+		return 'bad'
+
+	num_users = db.session.query(User).filter(User.eid == session['event_id']).count()
+	print(num_users)
+	print(session['event_id'])
+
+	return jsonify({'num_users': num_users})
+
+@app.route('/event/generate', methods=['POST'])
+def event_generate_groups():
+	if not session['event_creator']:
+		return 'bad'
+
+	ev = db.session.query(Event).filter(Event.id == session['event_id']).first()
+
+	match.generate_matches(db, ev.id)
+
+	return 'ok'
