@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = "user_uploads"
 
 '''Add database'''
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test11.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db' #'sqlite:////tmp/test10.db'
 
 with app.app_context():
 	db.init_app(app)
@@ -41,7 +41,6 @@ def join():
 	ev = db.session.query(Event).filter(Event.joincode == request.form['join_code']).first()
 
 	if ev is not None:
-		session['joincode'] = request.form['join_code']
 		print("that's valid my lad")
 		render_template('testing.html')
 	else:
@@ -51,15 +50,12 @@ def join():
 	return render_template('testing.html')
 
 @app.route('/userprofile', methods=['GET'])
-def userprofile():
+def userprofile() :
 	return render_template('testing.html')
 	  
 @app.route('/submit_form',methods = ['POST', 'GET'])
 def result():
 	if request.method == 'POST':
-		usr = User(username=request.form['name_form'], firstName=request.form['name_form'], eid=session['join_code'])
-		db.session.add(usr)
-		db.session.commit()
-		print('added ' + str(usr))
-		session['uid'] = usr.id
+		result = request.form
+		print(result)
 		return 'form submitted'
