@@ -37,7 +37,8 @@ class Match(db.Model):
 	eid = db.Column(db.Integer)
 	first = db.Column(db.Integer)
 	second = db.Column(db.Integer)
-		
+	color = db.Column(db.String(80))
+
 class UserAPI(MethodView):
 
 	def get(self, user_id):

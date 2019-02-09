@@ -121,7 +121,19 @@ def dislike(userid):
 
 @app.route('/match', methods=['GET'])
 def view_match():
-	return render_template('match.html')
+	usr = db.session.query(User).filter(User.id == session['uid']).first()
+	m = match.get_user_match(db, usr.id)
+
+	if m is None:
+		# couldn't find match
+		return redirect('/rate')
+
+	other = m.first
+	if usr.id == other:
+		other = m.second
+	o_usr = db.session.query(User).filter(User.id == other).first()
+
+	return render_template('match.html', name1=usr.firstName, content1='hi', name2=o_usr.firstName, content2='heyo', bg_color=m.color)
 
 @app.route('/event/create', methods=['GET'])
 def view_create():
